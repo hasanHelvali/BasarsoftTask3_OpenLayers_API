@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\BasarSoftTask2_API.props" />
+</Project>
