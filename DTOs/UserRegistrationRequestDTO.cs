@@ -7,7 +7,6 @@ namespace BasarSoftTask3_API.DTOs
     {
         //[Required]
         public string Name { get; set; }
-        public string UserName { get; set; }
         //[Required]
         public string Email { get; set; }
         //[Required]

@@ -1,7 +1,10 @@
 ﻿using BasarSoftTask3_API.DTOs;
 using BasarSoftTask3_API.Entities;
+using BasarSoftTask3_API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RTools_NTS.Util;
+using Token = BasarSoftTask3_API.Entities.Token;
 
 namespace BasarSoftTask3_API.Controllers
 {
@@ -11,102 +14,83 @@ namespace BasarSoftTask3_API.Controllers
     {
         private readonly IConfiguration _configuraiton;
         private readonly UserManager<UserRegister> _userManager;
-        public AuthManagementController(IConfiguration configuraiton, UserManager<UserRegister> userManager)
+        private readonly SignInManager<UserRegister> _signInManager;
+        public AuthManagementController(IConfiguration configuraiton, UserManager<UserRegister> userManager, SignInManager<UserRegister> signInManager)
         {
             _configuraiton = configuraiton;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        [HttpPost]
+        [HttpPost("VerifyToken")]
+        public async Task<IActionResult> VerifyToken([FromBody]JwtTokenDTO jwtTokenDTO)
+        {
+            bool isValid = TokenHandler.JwtValidator(jwtTokenDTO.JwtToken, _configuraiton);
+            if (isValid) return Ok("Giriş Yapılıyor");
+            else return BadRequest("Kullanıcı Tanımlı Değil");
+        }
+
+        [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser(UserRegistrationRequestDTO userRegistrationRequestDTO)
         {
             var emailExist = await _userManager.FindByEmailAsync(userRegistrationRequestDTO.Email);
+            var userNameExist = await _userManager.FindByNameAsync(userRegistrationRequestDTO.Email);
             if (emailExist != null)
                 return BadRequest("Bu email sistemde kayıtlıdır. | Email already exist");
-            
-            //var newUsers = new IdentityUser()
-            //{
-            //    Email = userRegistrationRequestDTO.Email,
-            //    UserName = userRegistrationRequestDTO.Name
-            //};
+            else if (userNameExist != null)
+                return BadRequest("Bu kullanıcı adı sistemde kayıtlıdır. | UserName already exist");
 
-            var isCreated = await _userManager.CreateAsync(new UserRegister 
-                { Email=userRegistrationRequestDTO.Email,
-                Name=userRegistrationRequestDTO.Name,
-                UserName= userRegistrationRequestDTO.UserName,
-                Password =userRegistrationRequestDTO.Password}
+            var isCreated = await _userManager.CreateAsync(new UserRegister
+            {
+                Name = userRegistrationRequestDTO.Name,
+                UserName = userRegistrationRequestDTO.Email,
+                Password = userRegistrationRequestDTO.Password
+            }
+
             );
             if (isCreated.Succeeded)
             {
+                var user = await _userManager.FindByNameAsync(userRegistrationRequestDTO.Email);
                 //Token Olusturma/Generate Token
-                Token token = Services.TokenHandler.GenerateToken(_configuraiton);
+                Token token = Services.TokenHandler.GenerateToken(_configuraiton, user.Name, user.Id);
                 //Token Olusturma/Generate Token
                 return Ok(token);
             }
             return BadRequest(error: isCreated.Errors.Select(x => x.Description).ToList());
         }
+
+        [HttpPost("LoginUser")]
+        public async Task<IActionResult> LoginUser(UserLoginRequestDTO userLoginRequestDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Geçersiz model.");
+            }
+
+            var user = await _userManager.FindByNameAsync(userLoginRequestDTO.Email);
+            if (user == null)
+            {
+                return BadRequest("Kullanıcı bulunamadı. Üye olun.");
+            }
+
+            if (user.UserName==userLoginRequestDTO.Email && user.Password==userLoginRequestDTO.Password)
+            {
+                var loginUser = await _userManager.FindByNameAsync(userLoginRequestDTO.Email);
+                Token token = TokenHandler.GenerateToken(_configuraiton, loginUser.Name, loginUser.Id);
+                return Ok(token);
+            }
+            else
+            {
+                return BadRequest("Geçersiz kullanıcı adı veya şifre.");
+            }
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetToken()
         {
-            Token token = Services.TokenHandler.GenerateToken(_configuraiton);
-            return Ok(token);
+            return Ok();
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Register([FromBody] UserRegistrationRequestDTO userRegistrationRequestDTO)
-        //{
-        //    string str = _tokenService.GenerateToken();
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var emailExist = await _userManager.FindByEmailAsync(userRegistrationRequestDTO.Email);
-        //        if (emailExist != null)
-        //            return BadRequest("email already exist");
-
-        //        var newUser = new IdentityUser()
-        //        {
-        //            Email = userRegistrationRequestDTO.Email,
-        //            UserName = userRegistrationRequestDTO.Email,
-        //        };
-
-        //        var isCreated = await _userManager.CreateAsync(newUser);
-        //        if (isCreated.Succeeded)
-        //        {
-        //            //Token Olusturma/Generate Token
-        //            return Ok(new RegistrationRequestResponse()
-        //            {
-        //                Result = true,
-        //                Token = ""
-        //            });
-        //            return BadRequest(error: isCreated.Errors.Select(x => x.Description).ToList());
-        //        }
-        //        return BadRequest("Hata: Kullanıcı oluşturulurken bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-        //        //Error:error creating the userü please try again later.
-        //    }
-        //    return BadRequest("Hata:Ilgili alanlar doldurulmadı.");//error: Invalid Request Payload
-        //}
-
-        //public async Task<IActionResult> GenerateJwtToken(IdentityUser identityUser)
-        //{
-        //    //var jwtTokenHandler=new JwtSecurityTokenHandler();
-        //    //var key = Encoding.ASCII.GetBytes(_configuraiton.GetSection(key: "JwtConfig:Secret").Value);
-        //    //var tokenDescriptor = new SecurityTokenDescriptor()
-        //    //{
-        //    //    Subject = new ClaimsIdentity(new[]
-        //    //    {
-        //    //        new Claim(type:"Id",value:identityUser.Id),
-        //    //        new Claim(type:JwtRegisteredClaimNames.Sub,value:identityUser.Email),
-        //    //        new Claim(type:JwtRegisteredClaimNames.Email,value:identityUser.Email),
-        //    //        new Claim(type:JwtRegisteredClaimNames.Jti,value:Guid.NewGuid().ToString()),
-        //    //    }),
-        //    //    Expires = DateTime.UtcNow.AddMinutes(1),
-        //    //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), algorithm: SecurityAlgorithms.HmacSha256)
-        //    //};
-        //    //var token=jwtTokenHandler.CreateToken(tokenDescriptor);
-        //    //var jwtToken = jwtTokenHandler.WriteToken(token);
-        //    //return jwtToken;
-        //    //string str = _tokenService.GenerateToken();
-        //    return Ok("");
-        //}
     }
 }

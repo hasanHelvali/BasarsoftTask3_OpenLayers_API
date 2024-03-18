@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BasarSoftTask3_API.Migrations
 {
     [DbContext(typeof(MapContext))]
-    [Migration("20240318142014_mig45")]
-    partial class mig45
+    [Migration("20240318183537_mig1")]
+    partial class mig1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -266,10 +266,6 @@ namespace BasarSoftTask3_API.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text");
 

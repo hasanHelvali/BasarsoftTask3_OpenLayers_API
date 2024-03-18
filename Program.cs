@@ -1,5 +1,6 @@
 using BasarSoftTask3_API.Configuration;
 using BasarSoftTask3_API.Context;
+using BasarSoftTask3_API.DTOs;
 using BasarSoftTask3_API.Entities;
 using BasarSoftTask3_API.IRepository;
 using BasarSoftTask3_API.Repository;
@@ -47,17 +48,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddIdentity<UserRegister,IdentityRole>().AddEntityFrameworkStores<MapContext>().AddDefaultTokenProviders();
 builder.Services.AddScoped<UserManager<UserRegister>>();
-
-//builder.Services.AddDbContext<MapContext>(optionsAction: options => options.UseNpgsql(
-//    builder.Configuration.GetConnectionString("PostgreDbConnectionString"),x=>x.UseNetTopologySuite()));
-//Burada kullandýgým konfigurasyon ayarý Identity sýnýfýndan kalýtýlan DBContext sýnfýný db ye tum identity tablosuyla eklemek icindir.
+builder.Services.AddScoped<SignInManager<UserRegister>>();
 
 builder.Services.AddCors(configuration => configuration.AddDefaultPolicy(policiy =>
 policiy.WithOrigins("http://localhost:4200", "https://localhost:4200")
 .AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
-//builder.Services.AddDefaultIdentity<IdentityUser>(configureOptions: options => options.SignIn.RequireConfirmedAccount = false)
-//    .AddEntityFrameworkStores<MapContext>();
 
 var app = builder.Build();
 

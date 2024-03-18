@@ -266,10 +266,6 @@ namespace BasarSoftTask3_API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasDiscriminator().HasValue("UserRegister");
                 });
 
