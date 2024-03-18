@@ -2,7 +2,7 @@
 using NetTopologySuite.Geometries;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace BasarSoftTask2_API.Entities
+namespace BasarSoftTask3_API.Entities
 {
     public class LocAndUsers
     {

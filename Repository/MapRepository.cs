@@ -1,8 +1,8 @@
-﻿using BasarSoftTask2_API.Context;
-using BasarSoftTask2_API.IRepository;
+﻿using BasarSoftTask3_API.Context;
+using BasarSoftTask3_API.IRepository;
 using Microsoft.EntityFrameworkCore;
 
-namespace BasarSoftTask2_API.Repository
+namespace BasarSoftTask3_API.Repository
 {
     public class MapRepository<T> : IMapRepository<T> where T : class
     {

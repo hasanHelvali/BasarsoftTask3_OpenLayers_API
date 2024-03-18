@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\BasarSoftTask3_API.props" />
+</Project>

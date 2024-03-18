@@ -1,7 +1,7 @@
-﻿using BasarSoftTask2_API.DTOs;
-using BasarSoftTask2_API.Entities;
-using BasarSoftTask2_API.IRepository;
-using BasarSoftTask2_API.Services;
+﻿using BasarSoftTask3_API.DTOs;
+using BasarSoftTask3_API.Entities;
+using BasarSoftTask3_API.IRepository;
+using BasarSoftTask3_API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite;
@@ -9,7 +9,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Implementation;
 using NetTopologySuite.IO;
 using System.Runtime.InteropServices;
-namespace BasarSoftTask2_API.Controllers
+namespace BasarSoftTask3_API.Controllers
 {
 
     [Route("api/[controller]")]
@@ -47,7 +47,6 @@ namespace BasarSoftTask2_API.Controllers
             return Ok(value);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> CreateMap(LocAndUserDTO locAndUser)
         {
@@ -81,8 +80,6 @@ namespace BasarSoftTask2_API.Controllers
             await _repository.RemoveAsync(value);
             return Ok();
         }
-
-
         [HttpPost("InteractionExists")]
         public async Task<IActionResult> InteractionExists( PointIntersectionDTO pointIntersectionDTO)
         {
@@ -96,7 +93,6 @@ namespace BasarSoftTask2_API.Controllers
                 WKT=x.Geometry.ToText()
             }).FirstOrDefault() ;
             return Ok(value);
-
         }
     }
 }

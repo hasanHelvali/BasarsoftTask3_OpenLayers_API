@@ -3,7 +3,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using NetTopologySuite;
 
-namespace BasarSoftTask2_API.Services
+namespace BasarSoftTask3_API.Services
 {
     public static class GeometryAndWktConvert
     {

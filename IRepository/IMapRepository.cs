@@ -1,4 +1,4 @@
-﻿namespace BasarSoftTask2_API.IRepository
+﻿namespace BasarSoftTask3_API.IRepository
 {
     public interface IMapRepository<T>
     {

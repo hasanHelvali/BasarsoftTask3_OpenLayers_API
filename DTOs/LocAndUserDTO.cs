@@ -1,4 +1,4 @@
-﻿namespace BasarSoftTask2_API.DTOs
+﻿namespace BasarSoftTask3_API.DTOs
 {
     public class LocAndUserDTO
     {
