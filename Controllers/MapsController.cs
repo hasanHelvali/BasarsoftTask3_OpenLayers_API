@@ -1,5 +1,6 @@
 ﻿using BasarSoftTask3_API.DTOs;
 using BasarSoftTask3_API.Entities;
+using BasarSoftTask3_API.Feature.Attributes;
 using BasarSoftTask3_API.IRepository;
 using BasarSoftTask3_API.Services;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,7 @@ namespace BasarSoftTask3_API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [CustomHttp]
     public class MapsController : ControllerBase
     {
         //private readonly IRepository<LocationAndUser> _repository;
@@ -41,6 +43,7 @@ namespace BasarSoftTask3_API.Controllers
         }
 
         [HttpGet("LocationById/{id}")]
+
         public async Task<IActionResult> LocationById(int id)
         {
             var value = await _repository.GetByIdAsync(id);

@@ -1,5 +1,6 @@
 ﻿using BasarSoftTask3_API.DTOs;
 using BasarSoftTask3_API.Entities;
+using BasarSoftTask3_API.Feature.Attributes;
 using BasarSoftTask3_API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,9 @@ namespace BasarSoftTask3_API.Controllers
     [ApiController]
     public class AuthManagementController : ControllerBase
     {
+
+
+        //Buranın acıklama satırlarını yazmamız gerekir.
         private readonly IConfiguration _configuraiton;
         private readonly UserManager<UserRegister> _userManager;
         private readonly SignInManager<UserRegister> _signInManager;
@@ -24,11 +28,12 @@ namespace BasarSoftTask3_API.Controllers
         }
 
         [HttpGet("VerifyToken")]
+        //[CustomHttp]
         public async Task<IActionResult> VerifyToken()
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "").TrimStart().TrimEnd();
 
-            bool isValid = TokenHandler.JwtValidator(token, _configuraiton);
+            bool isValid = TokenHandler.JwtValidator(token);
             if (isValid)
             {
                 return Ok();
@@ -38,7 +43,6 @@ namespace BasarSoftTask3_API.Controllers
                 throw new Exception("Token Geçerli Değil.");
             }
         }
-
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser(UserRegistrationRequestDTO userRegistrationRequestDTO)
         {
@@ -65,7 +69,6 @@ namespace BasarSoftTask3_API.Controllers
             }
             return BadRequest(error: isCreated.Errors.Select(x => x.Description).ToList());
         }
-
         [HttpPost("LoginUser")]
         public async Task<IActionResult> LoginUser(UserLoginRequestDTO userLoginRequestDTO)
         {
@@ -93,11 +96,11 @@ namespace BasarSoftTask3_API.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetToken()
-        {
-            return Ok();
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetToken()
+        //{
+        //    return Ok();
+        //}
 
     }
 }
