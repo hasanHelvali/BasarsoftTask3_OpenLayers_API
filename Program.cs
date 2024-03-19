@@ -1,4 +1,3 @@
-using BasarSoftTask3_API.Configuration;
 using BasarSoftTask3_API.Context;
 using BasarSoftTask3_API.DTOs;
 using BasarSoftTask3_API.Entities;

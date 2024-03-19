@@ -4,6 +4,7 @@ using BasarSoftTask3_API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RTools_NTS.Util;
+using System.Net;
 using Token = BasarSoftTask3_API.Entities.Token;
 
 namespace BasarSoftTask3_API.Controllers
@@ -22,12 +23,20 @@ namespace BasarSoftTask3_API.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpPost("VerifyToken")]
-        public async Task<IActionResult> VerifyToken([FromBody]JwtTokenDTO jwtTokenDTO)
+        [HttpGet("VerifyToken")]
+        public async Task<IActionResult> VerifyToken()
         {
-            bool isValid = TokenHandler.JwtValidator(jwtTokenDTO.JwtToken, _configuraiton);
-            if (isValid) return Ok("Giriş Yapılıyor");
-            else return BadRequest("Kullanıcı Tanımlı Değil");
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "").TrimStart().TrimEnd();
+
+            bool isValid = TokenHandler.JwtValidator(token, _configuraiton);
+            if (isValid)
+            {
+                return Ok();
+            }
+            else
+            {
+                throw new Exception("Token Geçerli Değil.");
+            }
         }
 
         [HttpPost("CreateUser")]
@@ -50,11 +59,9 @@ namespace BasarSoftTask3_API.Controllers
             );
             if (isCreated.Succeeded)
             {
-                var user = await _userManager.FindByNameAsync(userRegistrationRequestDTO.Email);
-                //Token Olusturma/Generate Token
-                Token token = Services.TokenHandler.GenerateToken(_configuraiton, user.Name, user.Id);
-                //Token Olusturma/Generate Token
-                return Ok(token);
+         
+
+                return Ok();
             }
             return BadRequest(error: isCreated.Errors.Select(x => x.Description).ToList());
         }
@@ -73,7 +80,7 @@ namespace BasarSoftTask3_API.Controllers
                 return BadRequest("Kullanıcı bulunamadı. Üye olun.");
             }
 
-            if (user.UserName==userLoginRequestDTO.Email && user.Password==userLoginRequestDTO.Password)
+            if (user.UserName == userLoginRequestDTO.Email && user.Password == userLoginRequestDTO.Password)
             {
                 var loginUser = await _userManager.FindByNameAsync(userLoginRequestDTO.Email);
                 Token token = TokenHandler.GenerateToken(_configuraiton, loginUser.Name, loginUser.Id);

@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="Context\" />
+    <Folder Include="Feature\Attributes\" />
   </ItemGroup>
 
 </Project>

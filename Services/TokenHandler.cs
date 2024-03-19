@@ -24,7 +24,7 @@ namespace BasarSoftTask3_API.Services
             SymmetricSecurityKey symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:SecurityKey"]));
 
             SigningCredentials signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-            token.Expiration = DateTime.Now.AddMinutes(Convert.ToInt16(configuration["Token:Expiration"]));
+            token.Expiration = DateTime.Now.AddSeconds(Convert.ToInt16(configuration["Token:Expiration"]));
 
             JwtSecurityToken jwtSecurityToken = new(
                 issuer: configuration["Token:Issuer"],
