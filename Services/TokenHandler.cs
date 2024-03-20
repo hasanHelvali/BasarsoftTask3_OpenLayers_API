@@ -14,13 +14,14 @@ namespace BasarSoftTask3_API.Services
     {
         //private static readonly IConfiguration _configuration;
 
-        public static Entities.Token GenerateToken(IConfiguration configuration,  string userName, string userId)
+        public static Entities.Token GenerateToken(IConfiguration configuration,  string userName, string userId,string role)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Name, userName),
                 new Claim(ClaimTypes.Email, userName),
+                new Claim(ClaimTypes.Role, role),
             };
             /*Claim ler ilgili sifrenin icerisinde tasınan veri parcalarıdır. Ben json olarak tasınacak sifrenin icerisinde bu bilgilerin olmasını istiyorum.*/
             Entities.Token token = new Entities.Token();//kendi yazdıgım token nesnemi bellege cıkarıyorum.
@@ -29,7 +30,7 @@ namespace BasarSoftTask3_API.Services
              byte bir array olarak sifreleyip bir nesne üzerine alıyorum.*/
             SigningCredentials signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             /*Burası ise ilgili jwt nin imzasının oluşturuldugu kısımdır. Verilen algritma bilgisi, verinin hangi formatla sifrelenecegini belirler.*/
-            token.Expiration = DateTime.Now.AddSeconds(Convert.ToInt16(configuration["Token:Expiration"]));
+            token.Expiration = DateTime.Now.AddHours(Convert.ToInt16(configuration["Token:Expiration"]));
             /*Her token in bir gecerlilik süresi olabilir. Bu sebeple olusturulacak jwt token icin bir gecerlilk süresi belirliyorum. Bu veriyi mevcut 
              * zamana eklıyorum.*/
 

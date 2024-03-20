@@ -14,21 +14,17 @@ namespace BasarSoftTask3_API.Controllers
     [ApiController]
     public class AuthManagementController : ControllerBase
     {
-
-
         //Buranın acıklama satırlarını yazmamız gerekir.
         private readonly IConfiguration _configuraiton;
         private readonly UserManager<UserRegister> _userManager;
-        private readonly SignInManager<UserRegister> _signInManager;
-        public AuthManagementController(IConfiguration configuraiton, UserManager<UserRegister> userManager, SignInManager<UserRegister> signInManager)
+        public AuthManagementController(IConfiguration configuraiton, UserManager<UserRegister> userManager
+            )
         {
             _configuraiton = configuraiton;
             _userManager = userManager;
-            _signInManager = signInManager;
         }
 
         [HttpGet("VerifyToken")]
-        //[CustomHttp]
         public async Task<IActionResult> VerifyToken()
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "").TrimStart().TrimEnd();
@@ -63,8 +59,6 @@ namespace BasarSoftTask3_API.Controllers
             );
             if (isCreated.Succeeded)
             {
-         
-
                 return Ok();
             }
             return BadRequest(error: isCreated.Errors.Select(x => x.Description).ToList());
@@ -86,7 +80,8 @@ namespace BasarSoftTask3_API.Controllers
             if (user.UserName == userLoginRequestDTO.Email && user.Password == userLoginRequestDTO.Password)
             {
                 var loginUser = await _userManager.FindByNameAsync(userLoginRequestDTO.Email);
-                Token token = TokenHandler.GenerateToken(_configuraiton, loginUser.Name, loginUser.Id);
+                var roles= await _userManager.GetRolesAsync(loginUser);
+                Token token = TokenHandler.GenerateToken(_configuraiton, loginUser.Name, loginUser.Id,roles.First());
                 return Ok(token);
             }
             else
@@ -95,12 +90,5 @@ namespace BasarSoftTask3_API.Controllers
             }
             return Ok();
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetToken()
-        //{
-        //    return Ok();
-        //}
-
     }
 }

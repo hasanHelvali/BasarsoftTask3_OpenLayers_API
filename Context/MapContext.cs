@@ -19,18 +19,12 @@ namespace BasarSoftTask3_API.Context
         {
             _configuration = configuration;
         }
-        //------------------
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             //optionsBuilder.UseNpgsql(_configuration.GetConnectionString("PostgreDbConnectionString"), x => x.UseNetTopologySuite());
             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=BasarSoftMapDB;Username=postgres;Password=postgres;", x => x.UseNetTopologySuite());
         }
-        //protected override void OnModelCreating(ModelBuilder builder)
-        //{
-        //    base.OnModelCreating(builder);
-        //    builder.Entity<UserRegister>().HasKey(u => u.ID);
-        //}
 
     }
 }
