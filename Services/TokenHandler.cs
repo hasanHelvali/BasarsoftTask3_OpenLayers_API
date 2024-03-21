@@ -14,7 +14,7 @@ namespace BasarSoftTask3_API.Services
     {
         //private static readonly IConfiguration _configuration;
 
-        public static Entities.Token GenerateToken(IConfiguration configuration,  string userName, string userId,string role)
+        public static Entities.Token GenerateToken(IConfiguration configuration,  string userName, string userId,string? role)
         {
             var claims = new List<Claim>
             {
