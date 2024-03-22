@@ -85,9 +85,28 @@ namespace BasarSoftTask3_API.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateRole()
+        [HttpPut("UpdateRole")]
+        public async Task<IActionResult> UpdateRole(Users users)
         {
+            //var user = await _userManager.FindByIdAsync(users.ID);
+
+            //var usersAndRoles = await _mapContext.Users.Select(x => new Users
+            //{
+            //    ID = x.Id,
+            //    Name = x.UserName,
+            //    Email = x.UserName,
+            //    Role = _mapContext.UserRoles.Where(ur => ur.UserId == x.Id).Select(x => x.RoleId).ToList()//roleid
+            //}).ToListAsync();
+            //foreach (var user in usersAndRoles)
+            //{
+            //    user.Role = await _mapContext.Roles
+            //        .Where(r => user.Role.Contains(r.Id))
+            //        .Select(r => r.Name)
+            //        .ToListAsync();
+            //}
+
+            var a = await _mapContext.UserRoles.Select(X => X.UserId == users.ID).ToListAsync();//rollerde degil user larda don.
+            
             return Ok();
         }
 
