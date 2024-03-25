@@ -15,7 +15,7 @@ namespace BasarSoftTask3_API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    [CustomHttp]
+    [CustomHttp("SuperAdmin")]
     public class MapsController : ControllerBase
     {
         //private readonly IRepository<LocationAndUser> _repository;

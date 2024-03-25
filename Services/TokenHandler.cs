@@ -7,12 +7,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using RTools_NTS.Util;
+using System.Runtime.CompilerServices;
 
 namespace BasarSoftTask3_API.Services
 {
     public static class TokenHandler
     {
         //private static readonly IConfiguration _configuration;
+        public static Entities.Token Token { get; set; }
 
         public static Entities.Token GenerateToken(IConfiguration configuration,  string userName, string userId,string? role)
         {
@@ -21,8 +23,9 @@ namespace BasarSoftTask3_API.Services
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Name, userName),
                 new Claim(ClaimTypes.Email, userName),
-                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.Role, role),//ClaimTypes olarak eklenen role bilgisi Authorize Attriute u tarafından okunur.
             };
+            //claims.Add
             /*Claim ler ilgili sifrenin icerisinde tasınan veri parcalarıdır. Ben json olarak tasınacak sifrenin icerisinde bu bilgilerin olmasını istiyorum.*/
             Entities.Token token = new Entities.Token();//kendi yazdıgım token nesnemi bellege cıkarıyorum.
             SymmetricSecurityKey symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Token:SecurityKey"]));
@@ -55,6 +58,7 @@ namespace BasarSoftTask3_API.Services
             token.RefreshToken = Convert.ToBase64String(numbers);//burada belirli bir byte dizisi base64 formatına donusturuldu. Bu refreshToken in kendisi oldu.
             //Yani refreshToken i da sifreliyoruz.
             //Refresh token
+            Token = token;
             return token;//token i fırından sıcak sıcak geri donduruyoruz.
         }
 
@@ -95,6 +99,22 @@ namespace BasarSoftTask3_API.Services
                 // Token in validasyonunda hata cıktı yani token gecersizdir.
                 return false;//false deger donulur.
             }
+        }
+        public static string GetRole(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtSecurityToken;
+            //if (tokenHandler.CanReadToken(token))
+            //{
+                jwtSecurityToken= tokenHandler.ReadJwtToken(token);
+            //}
+            //else
+            //{
+            //    throw new ArgumentException("Invalid JWT token");
+            //}
+            // Token'dan rolleri al
+            var roleClaims = jwtSecurityToken.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+            return roleClaims[0] ;
         }
     }
 }

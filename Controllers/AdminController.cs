@@ -11,7 +11,7 @@ namespace BasarSoftTask3_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [CustomHttp]
+    //[CustomHttp("SuperAdmin")]
     //[Authorize(Roles = "SuperAdmin")]
     public class AdminController : ControllerBase
     {
@@ -26,6 +26,8 @@ namespace BasarSoftTask3_API.Controllers
 
 
         [HttpPut("UpdateUser")]
+        [CustomHttp("SuperAdmin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser(Users users)
         {
             var user = await _userManager.FindByIdAsync(users.ID);
@@ -35,8 +37,8 @@ namespace BasarSoftTask3_API.Controllers
             return Ok();
         }
 
-
         [HttpDelete("{id}")]
+        [CustomHttp("SuperAdmin")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);

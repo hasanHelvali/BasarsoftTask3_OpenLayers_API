@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Runtime.InteropServices;
 
 namespace BasarSoftTask3_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [CustomHttp]
     public class RolesController : ControllerBase
     {
 
@@ -27,8 +27,8 @@ namespace BasarSoftTask3_API.Controllers
             _mapContext = mapContext;
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("GetAllUsers")]
+        [CustomHttp("Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             var values = await _userManager.Users.Select(x=>new UserRegister () { Id=x.Id, UserName=x.Name, Email= x.Email }).ToListAsync();
@@ -36,6 +36,7 @@ namespace BasarSoftTask3_API.Controllers
         }
 
         [HttpGet("GetRolesAndUsers")]
+        [CustomHttp("Admin")]
         public async Task<IActionResult> GetRolesAndUsers()
         {
             //var role = new IdentityRole("Admin");
@@ -66,8 +67,7 @@ namespace BasarSoftTask3_API.Controllers
             return Ok();
         }
         [HttpPost]
-        [CustomHttp]
-        [Authorize(Roles = "Admin")]
+        [CustomHttp("SuperAdmin")]
         public async Task<IActionResult> CreateRole([FromForm] A a)
         {
             var user = await _userManager.FindByIdAsync(a.Id);
@@ -86,34 +86,32 @@ namespace BasarSoftTask3_API.Controllers
         }
 
         [HttpPut("UpdateRole")]
+        [CustomHttp("SuperAdmin")]
         public async Task<IActionResult> UpdateRole(Users users)
         {
-            //var user = await _userManager.FindByIdAsync(users.ID);
+            Users _users = await _userManager.Users.Where(x=>x.Id==users.ID).Select(y=>new Users
+            {
+                ID=y.Id,
+                Email=y.Email,
+                Name=y.Name
+            }).FirstOrDefaultAsync();
 
-            //var usersAndRoles = await _mapContext.Users.Select(x => new Users
-            //{
-            //    ID = x.Id,
-            //    Name = x.UserName,
-            //    Email = x.UserName,
-            //    Role = _mapContext.UserRoles.Where(ur => ur.UserId == x.Id).Select(x => x.RoleId).ToList()//roleid
-            //}).ToListAsync();
-            //foreach (var user in usersAndRoles)
-            //{
-            //    user.Role = await _mapContext.Roles
-            //        .Where(r => user.Role.Contains(r.Id))
-            //        .Select(r => r.Name)
-            //        .ToListAsync();
-            //}
+            var allRoles= await _mapContext.Roles.ToListAsync();
+            var atanacakRol = allRoles.Find(x => x.Name == users.Role[0]);
 
-            var a = await _mapContext.UserRoles.Select(X => X.UserId == users.ID).ToListAsync();//rollerde degil user larda don.
-            
+            var  UserAndRole = await _mapContext.UserRoles.Where(x => x.UserId == users.ID).FirstOrDefaultAsync();
+            _mapContext.UserRoles.Remove(UserAndRole);
+            await _mapContext.SaveChangesAsync();
+            UserAndRole.UserId = users.ID;
+            UserAndRole.RoleId = atanacakRol.Id;
+            await _mapContext.UserRoles.AddAsync(UserAndRole);
+            await _mapContext.SaveChangesAsync();
             return Ok();
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteRole()
         {
-            //await userManager.RemoveFromRoleAsync(user, "RolAdi");
             return Ok();
         }
     }

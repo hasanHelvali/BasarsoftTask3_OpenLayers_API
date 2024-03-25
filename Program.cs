@@ -1,9 +1,11 @@
 using BasarSoftTask3_API.Context;
 using BasarSoftTask3_API.DTOs;
 using BasarSoftTask3_API.Entities;
+using BasarSoftTask3_API.Filters;
 using BasarSoftTask3_API.IRepository;
 using BasarSoftTask3_API.Repository;
 using BasarSoftTask3_API.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,12 +32,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     x.RequireHttpsMetadata = false;
     x.TokenValidationParameters = new TokenValidationParameters()
     {
-        
         ValidateAudience = true,
         ValidateIssuer = true,
         ValidateIssuerSigningKey=true,
         ValidateLifetime=true,
-
         ValidIssuer = builder.Configuration["Token:Issuer"],
         ValidAudience = builder.Configuration["Token:Audience"],//denetleneip denetlenmeyecegini sorar. Denetlensin diyorum. True da diyebilriim.
         IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
@@ -44,6 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     /*Jwt yapoýsýnýn Program.cs tarafýndaki konfigurasyonu bu kadardýr. Bu konfigurasyon uzeirne bir class bina edip
      *bu class ý controller tarafýnda kullanabiliriz.*/
 });
+
+
 
 builder.Services.AddIdentity<UserRegister,IdentityRole>().AddEntityFrameworkStores<MapContext>().AddDefaultTokenProviders();
 builder.Services.AddScoped<UserManager<UserRegister>>();
@@ -55,6 +57,33 @@ policiy.WithOrigins("http://localhost:4200", "https://localhost:4200")
 .AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserPolicy", policy =>
+    {
+        policy.RequireRole("User");
+    });
+
+    options.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+
+    options.AddPolicy("SuperAdmin", policy =>
+    {
+        policy.RequireRole("SuperAdmin");
+    });
+});
+//Uygulamada gecerli olan yetkilendirme politikalarý bu sekilde verilmistir.
+//builder.Services.AddAuthentication().AddScheme<AuthenticationSchemeOptions,>
+
+//builder.Services.AddControllers(options =>
+//{
+//options.Filters.Add<ValidationFilter>();
+//options.Filters.Add<RoleAuthorizationFilter>();
+//Ilgili middleware i pipeline a ekledik.
+//});
+
 var app = builder.Build();
 
 
@@ -62,13 +91,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
 
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors();
 app.MapControllers();
 
 app.Run();

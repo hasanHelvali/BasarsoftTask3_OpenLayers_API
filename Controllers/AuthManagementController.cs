@@ -4,6 +4,8 @@ using BasarSoftTask3_API.Entities;
 using BasarSoftTask3_API.Feature.Attributes;
 using BasarSoftTask3_API.IRepository;
 using BasarSoftTask3_API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,24 +50,15 @@ namespace BasarSoftTask3_API.Controllers
         }
 
         [HttpGet("GetAllUsers")]
+        [CustomHttp("Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
-
-            //var usersAndRoles = await _mapContext.Users.Select(x=>new Users
-            //{
-            //    ID=x.Id,
-            //    Name=x.UserName,
-            //    Email=x.Email,
-            //    Role=await _roleManager.Roles.Where(y => y.Id == x.Id).Select(y=>y.Name).FirstOrDefaultAsync(),
-            //}).ToList();
-
-
-            var usersAndRoles= await _mapContext.Users.Select(x => new Users
+            var usersAndRoles = await _mapContext.Users.Select(x => new Users
             {
                 ID = x.Id,
                 Name = x.UserName,
                 Email = x.UserName,
-                Role =  _mapContext.UserRoles.Where(ur => ur.UserId == x.Id).Select(x=>x.RoleId).ToList()//roleid
+                Role = _mapContext.UserRoles.Where(ur => ur.UserId == x.Id).Select(x => x.RoleId).ToList()//roleid
             }).ToListAsync();
             foreach (var user in usersAndRoles)
             {
@@ -74,7 +67,6 @@ namespace BasarSoftTask3_API.Controllers
                     .Select(r => r.Name)
                     .ToListAsync();
             }
-
             return Ok(usersAndRoles);
         }
 
