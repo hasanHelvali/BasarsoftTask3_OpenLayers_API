@@ -12,6 +12,7 @@ namespace BasarSoftTask3_API.Context
 
         public DbSet<LocAndUsers> LocsAndUsers { get; set; }
         public DbSet<UserRegister> UserRegisters { get; set; }
+        public DbSet<GeographyAuthority> GeographyAuthorities { get; set; }
 
         private readonly IConfiguration _configuration;
 

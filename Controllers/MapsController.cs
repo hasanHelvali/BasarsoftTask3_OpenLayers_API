@@ -1,10 +1,12 @@
-﻿using BasarSoftTask3_API.DTOs;
+﻿using BasarSoftTask3_API.Context;
+using BasarSoftTask3_API.DTOs;
 using BasarSoftTask3_API.Entities;
 using BasarSoftTask3_API.Feature.Attributes;
 using BasarSoftTask3_API.IRepository;
 using BasarSoftTask3_API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Implementation;
@@ -20,25 +22,37 @@ namespace BasarSoftTask3_API.Controllers
     {
         //private readonly IRepository<LocationAndUser> _repository;
         private readonly IMapRepository<LocAndUsers> _repository;
+        private readonly MapContext _context;
 
         //public MapsController(IRepository<LocationAndUser> repository)
-        public MapsController(IMapRepository<LocAndUsers> repository)
+        public MapsController(IMapRepository<LocAndUsers> repository, MapContext context)
         {
             _repository = repository;
+            _context = context;
         }
 
         [HttpGet]
         public async Task<IActionResult> ListLocation()
         {
             var _values = await _repository.GetAllAsync();
+            var users = await _context.LocsAndUsers.Select(x =>x.ID).ToListAsync();
             var values = _values.Select(x => new LocAndUserDTO
             {
                 ID = x.ID,
-                WKT=x.Geometry.ToText(),
+                WKT = x.Geometry.ToText(),
                 Name = x.Name,
                 Type = x.Type,
             }).ToList();
 
+            foreach (LocAndUserDTO value in values)
+            {
+                //UserId = await _context.GeographyAuthorities.Where(y => y.LocationID == x.ID).Select(z => z.UsersID).FirstOrDefaultAsync()
+                var userId = await _context.GeographyAuthorities
+                            .Where(y => y.LocationID == value.ID)
+                            .Select(z => z.UsersID)
+                            .FirstOrDefaultAsync();
+                value.UserId = userId;
+            }
             return Ok(values);
         }
 

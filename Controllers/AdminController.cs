@@ -11,8 +11,6 @@ namespace BasarSoftTask3_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[CustomHttp("SuperAdmin")]
-    //[Authorize(Roles = "SuperAdmin")]
     public class AdminController : ControllerBase
     {
         private readonly UserManager<UserRegister> _userManager;

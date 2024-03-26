@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BasarSoftTask3_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -13,9 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BasarSoftTask3_API.Migrations
 {
     [DbContext(typeof(MapContext))]
-    partial class MapContextModelSnapshot : ModelSnapshot
+    [Migration("20240326065750_mig2")]
+    partial class mig2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,21 +36,23 @@ namespace BasarSoftTask3_API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("LocAndUsersID")
+                    b.Property<Geometry>("Geometry")
+                        .IsRequired()
+                        .HasColumnType("geometry");
+
+                    b.Property<int>("GeometryID")
                         .HasColumnType("integer");
 
-                    b.Property<int>("LocationID")
+                    b.Property<int>("UsersID")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UsersID")
+                    b.Property<string>("UsersID1")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("LocAndUsersID");
-
-                    b.HasIndex("UsersID");
+                    b.HasIndex("UsersID1");
 
                     b.ToTable("GeographyAuthorities");
                 });
@@ -320,19 +325,11 @@ namespace BasarSoftTask3_API.Migrations
 
             modelBuilder.Entity("BasarSoftTask3_API.Entities.GeographyAuthority", b =>
                 {
-                    b.HasOne("BasarSoftTask3_API.Entities.LocAndUsers", "LocAndUsers")
-                        .WithMany()
-                        .HasForeignKey("LocAndUsersID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BasarSoftTask3_API.Entities.Users", "Users")
                         .WithMany()
-                        .HasForeignKey("UsersID")
+                        .HasForeignKey("UsersID1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("LocAndUsers");
 
                     b.Navigation("Users");
                 });

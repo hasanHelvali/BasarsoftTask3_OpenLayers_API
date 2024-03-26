@@ -6,5 +6,6 @@
         public string Name{ get; set; }
         public string Type { get; set; }
         public string WKT{ get; set; }
+        public string UserId{ get; set; }
     }
 }
