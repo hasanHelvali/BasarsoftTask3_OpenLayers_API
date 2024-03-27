@@ -9,8 +9,8 @@ namespace BasarSoftTask3_API.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
+        public string? Name { get; set; }
+        public string? Type { get; set; }
         public Geometry Geometry { get; set; }
     }
 }

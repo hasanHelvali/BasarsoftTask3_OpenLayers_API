@@ -58,7 +58,7 @@ namespace BasarSoftTask3_API.Controllers
                 ID = x.Id,
                 Name = x.UserName,
                 Email = x.UserName,
-                Role = _mapContext.UserRoles.Where(ur => ur.UserId == x.Id).Select(x => x.RoleId).ToList()//roleid
+                Role = _mapContext.UserRoles.Where(ur => ur.UserId == x.Id).Select(x => x.RoleId).ToList()//roleid,
             }).ToListAsync();
             foreach (var user in usersAndRoles)
             {
@@ -66,6 +66,7 @@ namespace BasarSoftTask3_API.Controllers
                     .Where(r => user.Role.Contains(r.Id))
                     .Select(r => r.Name)
                     .ToListAsync();
+
             }
             return Ok(usersAndRoles);
         }
