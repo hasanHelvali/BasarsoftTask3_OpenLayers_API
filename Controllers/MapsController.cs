@@ -99,7 +99,6 @@ namespace BasarSoftTask3_API.Controllers
             await _repository.UpdateAsync(value);
             return Ok();
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -111,43 +110,29 @@ namespace BasarSoftTask3_API.Controllers
         public async Task<IActionResult> InteractionExists(PointIntersectionDTO pointIntersectionDTO)
         {
             //Burada userName e gore ilgili kaydı alıp o user icinde boyle bir alan tanımlı mı onu goruntulemeye calısıyoruz.
-
             var user = await _userManager.FindByIdAsync(pointIntersectionDTO.ID);//user alındı
-
-            var topologyWithUsers = await _context.GeographyAuthorities.Where(x => x.UsersID == user.Id).Select(y=>new GeographyAuthority
+            //ocnelikle user bulundu.
+            var topologyWithUsers = await _context.GeographyAuthorities.Where(x => x.UsersID == user.Id).Select(y => new GeographyAuthority
             {
-                ID=y.ID,
-                LocationID=y.LocationID,
-                UsersID=y.UsersID
+                ID = y.ID,
+                LocationID = y.LocationID,
+                UsersID = y.UsersID
             }).ToListAsync();
-
-            ////Simdi bu nesnedeki location id ye ait bir wkt var mı onu gorelim. Oncelikle buradaki topografi bilgisine ulasmam lazım.
-            //await _repository.GetByIdAsync();
-            //if(pointIntersectionDTO)
-            List<LocAndUsers> locAndUser = null ;
-            LocAndUserDTO? locAndUserDTO=null;
+            //User aracılıgıyla ara tablodan ilgili user ile alakalı olan topolojiler alınır.
+            List<LocAndUsers> locAndUser = null;
+            LocAndUserDTO? locAndUserDTO = null;
             int sayac = 0;
-            foreach (var topologyWithUser in topologyWithUsers)
+            foreach (var topologyWithUser in topologyWithUsers)//Ilgili topolojiler uzerinde donulur.
             {
                 sayac++;
                 locAndUser = await _context.LocsAndUsers.Where(X => X.ID == topologyWithUser.LocationID).ToListAsync();
-                if (sayac== topologyWithUsers.Count &&  locAndUser == null)
+                //Ara tablodaki konum id leri ile LocAndUser daki id ler eslenir. Yani yetkilendirilmis konumlar cekilir.
+                if (sayac == topologyWithUsers.Count && locAndUser == null)
                 {
                     return Ok("Bir Kayıt Bulunamadı.");
                 }
                 var geom = GeometryAndWktConvert.WktToGeometrys(pointIntersectionDTO.PointWKT);//ilgili gelen wkt nin geometrisi elde edildi.
                 locAndUserDTO = new LocAndUserDTO();
-                //if()
-                //locAndUserDTO = await _context.LocsAndUsers.Where(x => x.Geometry.Contains(geom)).Select(y => new LocAndUserDTO
-                //{
-                //    ID = y.ID,
-                //    Name = y.Name,
-                //    Type = y.Type,
-                //    WKT = y.Geometry.ToText(),
-
-                //}).FirstOrDefaultAsync();
-
-
 
                 locAndUserDTO = locAndUser.Where(x => x.Geometry.Contains(geom)).Select(y => new LocAndUserDTO
                 {
@@ -156,17 +141,20 @@ namespace BasarSoftTask3_API.Controllers
                     Type = y.Type,
                     WKT = y.Geometry.ToText()
                 }).FirstOrDefault();
-                
-                if (locAndUserDTO!=null)
-                {
-                    return Ok(locAndUserDTO);
-                }
+                /*Gelen Wkt nin icinde bulundugu topoloji nesnesi tammanen alınıyor.*/
 
+                if (locAndUserDTO != null)
+                {
+                    return Ok(locAndUserDTO); //Burası ilk dongu icin
+                    //Bu nesne doluysa ilgili user a ait bir yetkilendirilmis konum var demektir. Bunu geri donuyoruz.
+                }
             }
             if (locAndUserDTO != null)
-                return Ok(locAndUserDTO);
+                return Ok(locAndUserDTO);//Burası ilk donguden sonraki eslesmeler icindir.
+                                         //Bu nesne doluysa ilgili user a ait bir yetkilendirilmis konum var demektir. Bunu geri donuyoruz.
             else
-                return Ok("Yetkiniz Yok.");
+                //return Ok("Yetkiniz Yok.");//Burada ise bir alan yok demektir. Bos bir veri donuyorum.
+                throw new Exception("Yetkiniz Yok");
         }
     }
 }
