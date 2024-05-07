@@ -32,7 +32,7 @@ namespace BasarSoftTask3_API.Controllers
             user.UserName = users.Name;
             user.Email = users.Email;
             await _userManager.UpdateAsync(user);
-            return Ok();
+            return Ok(true);
         }
 
         [HttpDelete("{id}")]

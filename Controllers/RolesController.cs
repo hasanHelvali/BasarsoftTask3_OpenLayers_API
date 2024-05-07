@@ -106,7 +106,7 @@ namespace BasarSoftTask3_API.Controllers
             UserAndRole.RoleId = atanacakRol.Id;
             await _mapContext.UserRoles.AddAsync(UserAndRole);
             await _mapContext.SaveChangesAsync();
-            return Ok();
+            return Ok(true);
         }
 
         [HttpDelete]

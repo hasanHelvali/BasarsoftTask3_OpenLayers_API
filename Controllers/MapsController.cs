@@ -78,33 +78,37 @@ namespace BasarSoftTask3_API.Controllers
         public async Task<IActionResult> CreateMap(LocAndUserDTO locAndUser)
         {
             var geometry = GeometryAndWktConvert.WktToGeometrys(locAndUser.WKT);
+            var _type = GeometryAndWktConvert.GetWktType(locAndUser.WKT);
             await _repository.CreateAsync(new LocAndUsers
             {
                 Name = locAndUser.Name,
-                Type = locAndUser.Type,
+                //Type = locAndUser.Type,
+                Type = _type,
                 Geometry = geometry
             });
-            return Ok();
+            return Ok(true);
         }
         [HttpPut]
         public async Task<IActionResult> UpdateMap(LocAndUserDTO locAndUsers)
         {
             var value = await _repository.GetByIdAsync(locAndUsers.ID);
             var geometry = GeometryAndWktConvert.WktToGeometrys(locAndUsers.WKT);
+            var _type = GeometryAndWktConvert.GetWktType(locAndUsers.WKT);
             value.ID = locAndUsers.ID;
             value.Geometry = geometry;
             value.Name = locAndUsers.Name;
-            value.Type = locAndUsers.Type;
+            //value.Type = locAndUsers.Type;
+            value.Type = _type;
 
             await _repository.UpdateAsync(value);
-            return Ok();
+            return Ok(true);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var value = await _repository.GetByIdAsync(id);
             await _repository.RemoveAsync(value);
-            return Ok();
+            return Ok(true);
         }
         [HttpPost("InteractionExists")]
         public async Task<IActionResult> InteractionExists(PointIntersectionDTO pointIntersectionDTO)

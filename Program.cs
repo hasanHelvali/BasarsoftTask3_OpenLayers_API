@@ -52,10 +52,15 @@ builder.Services.AddScoped<UserManager<UserRegister>>();
 builder.Services.AddScoped<SignInManager<UserRegister>>();
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
-builder.Services.AddCors(configuration => configuration.AddDefaultPolicy(policiy =>
-policiy.WithOrigins("http://localhost:4200", "https://localhost:4200")
-.AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
+//angular cors
+//builder.Services.AddCors(configuration => configuration.AddDefaultPolicy(policiy =>
+//policiy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+//.AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
+//react cors
+builder.Services.AddCors(configuration => configuration.AddDefaultPolicy(policiy =>
+policiy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+.AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
 
 builder.Services.AddAuthorization(options =>
 {

@@ -66,7 +66,7 @@ namespace BasarSoftTask3_API.Controllers
                 UsersID = geoAuth.Users.ID,
             });
             await _mapContext.SaveChangesAsync();
-            return Ok();
+            return Ok(true);
         }
 
         [HttpGet("GetActiveUser")]
@@ -88,7 +88,7 @@ namespace BasarSoftTask3_API.Controllers
             {
                 _mapContext.GeographyAuthorities.Remove(clearTop);
                 await _mapContext.SaveChangesAsync();
-                return Ok();
+                return Ok(true);
             }
             else
             {

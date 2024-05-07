@@ -105,7 +105,8 @@ namespace BasarSoftTask3_API.Controllers
                 var user = await _userManager.FindByNameAsync(userRegistrationRequestDTO.Email);
                 var role = new IdentityRole("User");
                 await _userManager.AddToRoleAsync(user, role.Name);
-                return Ok();//;
+                //return Ok();
+                return Ok(true);
             }
             return BadRequest(error: isCreated.Errors.Select(x => x.Description).ToList());
         }
