@@ -125,3 +125,4 @@ C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\System.Identi
 C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\BasarSoftTask3_API.staticwebassets.runtime.json
 C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
 C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Embedded.dll
+C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\libman.json

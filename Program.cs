@@ -89,6 +89,8 @@ builder.Services.AddAuthorization(options =>
 //Ilgili middleware i pipeline a ekledik.
 //});
 
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 

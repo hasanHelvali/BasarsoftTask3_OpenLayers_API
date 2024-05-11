@@ -33,7 +33,7 @@ namespace BasarSoftTask3_API.Services
              byte bir array olarak sifreleyip bir nesne üzerine alıyorum.*/
             SigningCredentials signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             /*Burası ise ilgili jwt nin imzasının oluşturuldugu kısımdır. Verilen algritma bilgisi, verinin hangi formatla sifrelenecegini belirler.*/
-            token.Expiration = DateTime.Now.AddSeconds(Convert.ToInt16(configuration["Token:Expiration"]));
+            token.Expiration = DateTime.Now.AddMinutes(Convert.ToInt16(configuration["Token:Expiration"]));
             /*Her token in bir gecerlilik süresi olabilir. Bu sebeple olusturulacak jwt token icin bir gecerlilk süresi belirliyorum. Bu veriyi mevcut 
              * zamana eklıyorum.*/
 
