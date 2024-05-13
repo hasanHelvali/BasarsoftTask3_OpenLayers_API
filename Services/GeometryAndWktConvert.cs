@@ -3,6 +3,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using NetTopologySuite;
 using System.Drawing;
+using System.Text;
 
 namespace BasarSoftTask3_API.Services
 {
@@ -27,6 +28,30 @@ namespace BasarSoftTask3_API.Services
             else if (wkt.StartsWith("POLYGON"))
                 return "POLYGON";
             else { return "POINT"; }
+        }
+
+
+        public static string ArrayToWkt(dynamic coordinates)
+        {
+            StringBuilder wkt = new StringBuilder();
+            wkt.Append("POLYGON (");
+
+            // Koordinatları döngüyle işleyerek WKT formatına dönüştür
+            foreach (var coordSet in coordinates)
+            {
+                wkt.Append("(");
+               wkt.Append(coordSet[0] + " " + coordSet[1] + ",");
+                // İlk koordinatı tekrar ekle (çokgenin kapanması için)
+                var firstCoord = coordSet[0];
+                wkt.Append(firstCoord[0] + " " + firstCoord[1]);
+                wkt.Append("),");
+            }
+
+            // Son virgülü kaldır ve WKT formatını kapat
+            wkt.Length--; // Son virgülü kaldır
+            wkt.Append(")");
+
+            return wkt.ToString();
         }
     }
 }

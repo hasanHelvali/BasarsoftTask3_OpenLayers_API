@@ -126,3 +126,6 @@ C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\BasarSoftTask
 C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
 C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Embedded.dll
 C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\libman.json
+C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\NetTopologySuite.Features.dll
+C:\Users\Hasan_Helvali\Desktop\BasarSoftTask3_API\bin\Debug\net8.0\NetTopologySuite.IO.GeoJSON.dll

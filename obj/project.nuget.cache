@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "1Lialh8PXImxoGaR9l7QuSjhCxi28h3c7sFb2Np/CF5b+eWDEQi4kF0Lpd/ffIYetrkUVf0BIs3ZfQYIqcZT7Q==",
+  "dgSpecHash": "nO/OpGrwbVKKVptjVFWrxTGzu9GeMq11guhkuJKe9sfMBzsNF8a5TDjkJqb9gwsYqPqUkJ/fvFBEvIXmVuQmZg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Hasan_Helvali\\Desktop\\BasarSoftTask3_API\\BasarSoftTask3_API.csproj",
   "expectedPackageFiles": [
@@ -46,7 +46,10 @@
     "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\nettopologysuite\\2.5.0\\nettopologysuite.2.5.0.nupkg.sha512",
+    "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\nettopologysuite.features\\2.1.0\\nettopologysuite.features.2.1.0.nupkg.sha512",
+    "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\nettopologysuite.io.geojson\\4.0.0\\nettopologysuite.io.geojson.4.0.0.nupkg.sha512",
     "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\nettopologysuite.io.postgis\\2.1.0\\nettopologysuite.io.postgis.2.1.0.nupkg.sha512",
+    "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\npgsql\\8.0.2\\npgsql.8.0.2.nupkg.sha512",
     "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.2\\npgsql.entityframeworkcore.postgresql.8.0.2.nupkg.sha512",
     "C:\\Users\\Hasan_Helvali\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql.nettopologysuite\\8.0.2\\npgsql.entityframeworkcore.postgresql.nettopologysuite.8.0.2.nupkg.sha512",
