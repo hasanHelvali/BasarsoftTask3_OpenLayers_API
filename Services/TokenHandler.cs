@@ -102,6 +102,8 @@ namespace BasarSoftTask3_API.Services
         }
         public static string GetRole(string token)
         {
+            if (string.IsNullOrEmpty(token))
+                return null;
             var tokenHandler = new JwtSecurityTokenHandler();
             JwtSecurityToken jwtSecurityToken;
             //if (tokenHandler.CanReadToken(token))
@@ -116,5 +118,16 @@ namespace BasarSoftTask3_API.Services
             var roleClaims = jwtSecurityToken.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
             return roleClaims[0] ;
         }
+
+        public static string GetUserName(string token)
+        {
+            if (string.IsNullOrEmpty(token)) return null;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtSecurityToken;
+            jwtSecurityToken = tokenHandler.ReadJwtToken(token);
+            var roleClaims = jwtSecurityToken.Claims.Where(c => c.Type== ClaimTypes.Name).Select(c => c.Value).ToList();
+            return roleClaims[0];
+        }
+
     }
 }

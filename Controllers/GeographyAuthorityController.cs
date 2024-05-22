@@ -12,6 +12,7 @@ namespace BasarSoftTask3_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [CustomHttp("SuperAdmin")]
     public class GeographyAuthorityController : ControllerBase
     {
         private readonly MapContext _mapContext;

@@ -1,7 +1,9 @@
-﻿using BasarSoftTask3_API.Services;
+﻿using BasarSoftTask3_API.Logging;
+using BasarSoftTask3_API.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
@@ -12,6 +14,8 @@ namespace BasarSoftTask3_API.Feature.Attributes
      attribute sınıfıdır. Bu yuzden attribute olmasını istedigim sınıfı ActionFilterAttribute yapısından kalıtıyorum.*/
     public class CustomHttpAttribute : ActionFilterAttribute
     {
+        //LogProducer logProducer = new LogProducer();
+
         public string Permission { get; set; } = "";
         //public CustomHttpAttribute(string permission)
         //{
@@ -22,13 +26,14 @@ namespace BasarSoftTask3_API.Feature.Attributes
         {
             this.Permission = Permission;
         }
-
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            //logProducer.SendLog("dada");
+
             /*Bu metot ise ilgili sınıfın sanal ve ozellestirilebilir metodudur. Her httpisteginden once calısan bu metot ilgili isteklerde 
              bazı önişlemler icin kullanılıyor. Ben her istegin icerisine token vermistim. Burada her istekten once token i kontrol etmek istiyorum.*/
 
-            string ?token = context.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "").TrimStart().TrimEnd();
+            string? token = context.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "").TrimStart().TrimEnd();
             //token elde edildi.
 
             if (string.IsNullOrEmpty(token))

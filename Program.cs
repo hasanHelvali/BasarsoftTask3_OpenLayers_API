@@ -3,6 +3,8 @@ using BasarSoftTask3_API.DTOs;
 using BasarSoftTask3_API.Entities;
 using BasarSoftTask3_API.Filters;
 using BasarSoftTask3_API.IRepository;
+using BasarSoftTask3_API.Logging;
+using BasarSoftTask3_API.Middlewares;
 using BasarSoftTask3_API.Repository;
 using BasarSoftTask3_API.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -27,6 +29,9 @@ builder.Services.AddDbContext<MapContext>(o=>o.UseNpgsql("Host=localhost;Port=54
 
 builder.Services.AddScoped(typeof(IMapRepository<>), typeof(MapRepository<>));
 //builder.Services.AddScoped(typeof(IMapRepository<>), typeof(MapRepository<>));
+
+builder.Services.AddSingleton<LogProducer>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
 {
     x.RequireHttpsMetadata = false;
@@ -99,6 +104,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
+    app.UseMiddleware<LoggingMiddleware>();
 }
 
 app.UseHttpsRedirection();
