@@ -73,6 +73,10 @@
               "target": "Package",
               "version": "[8.0.2, )"
             },
+            "NEST": {
+              "target": "Package",
+              "version": "[7.17.5, )"
+            },
             "NetTopologySuite": {
               "target": "Package",
               "version": "[2.5.0, )"

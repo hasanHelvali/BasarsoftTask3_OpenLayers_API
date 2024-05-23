@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Newtonsoft.Json;
+using BasarSoftTask3_API.DTOs;
 
 namespace BasarSoftTask3_API.Middlewares
 {
@@ -46,7 +47,11 @@ namespace BasarSoftTask3_API.Middlewares
                     userName=userName,
                     body= body,
                     //queryString= request.QueryString,
-                    routeData=request.RouteValues,
+                    routeData = new DTOs.RouteData
+                    {
+                        Action = request.RouteValues["action"].ToString(),
+                        Controller = request.RouteValues["controller"].ToString()
+                    },
                     Timestamp = DateTime.UtcNow
                 };
                 //var logMessage = JsonSerializer.Serialize(log);
