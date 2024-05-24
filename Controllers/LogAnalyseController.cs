@@ -16,7 +16,7 @@ namespace BasarSoftTask3_API.Controllers
         public LogAnalyseController()
         {
             var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
-                       .DefaultIndex("logs_v2").DefaultMappingFor<DTOs.Log>(m => m.IndexName("logs_v2")); // logs index name
+                       .DefaultIndex("logs_v3").DefaultMappingFor<DTOs.Log>(m => m.IndexName("logs_v3")); // logs index name
             _client = new ElasticClient(settings);
         }
 
@@ -46,14 +46,16 @@ namespace BasarSoftTask3_API.Controllers
                     return BadRequest("Invalid logTime value. It should be 1, 7, or 30.");
                 }
 
-                //var searchResponse = await _client.SearchAsync<Log>(s => s.Index("logs_v2").From(0).Size(1000)
-                //    .Query(q=>q.Bool(b=>b.Filter(f=>f.DateRange(dr=>dr.Field(f=>f.Message.Timestamp)
-                //                        .GreaterThanOrEquals(fromDate.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")) // Başlangıç tarihini belirtin
-                //    .LessThanOrEquals(now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")))))));
-                var searchResponse = await _client.SearchAsync<Log>(s => s.Index("logs_v2").From(0).Size(1000)
-                .Query(q => q.Bool(b => b.Filter(f => f.DateRange(dr => dr.Field(f => f.Message.Timestamp)
-                                    .GreaterThanOrEquals(fromDate) // Başlangıç tarihini belirtin
-                .LessThanOrEquals(now))))));
+                var searchResponse = _client.Search<Log>(s => s
+                    .Size(1000)
+                   .Query(q => q
+                       .DateRange(r => r
+                           .Field(f => f.Timestamp)
+                           .GreaterThanOrEquals(DateMath.Anchored(fromDate))
+                           .LessThanOrEquals(DateMath.Now)
+                       )
+                   )
+               );
 
                 if (searchResponse.IsValid)
                 {

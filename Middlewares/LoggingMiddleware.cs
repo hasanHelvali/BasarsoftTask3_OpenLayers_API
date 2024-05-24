@@ -47,7 +47,7 @@ namespace BasarSoftTask3_API.Middlewares
                     userName=userName,
                     body= body,
                     //queryString= request.QueryString,
-                    routeData = new DTOs.RouteData
+                    routeData = new 
                     {
                         Action = request.RouteValues["action"].ToString(),
                         Controller = request.RouteValues["controller"].ToString()
