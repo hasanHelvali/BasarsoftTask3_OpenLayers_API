@@ -2,12 +2,13 @@
 using BasarSoftTask3_API.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 using NetTopologySuite;
 using NetTopologySuite.IO;
 using System.Xml;
 namespace BasarSoftTask3_API.Context
 {
-    public class MapContext:IdentityDbContext
+    public class MapContext:IdentityDbContext 
     {
 
         public DbSet<LocAndUsers> LocsAndUsers { get; set; }
@@ -27,5 +28,6 @@ namespace BasarSoftTask3_API.Context
             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=BasarSoftMapDB;Username=postgres;Password=postgres;", x => x.UseNetTopologySuite());
         }
 
+        
     }
 }

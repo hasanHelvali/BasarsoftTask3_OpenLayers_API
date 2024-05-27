@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using Newtonsoft.Json;
 using BasarSoftTask3_API.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BasarSoftTask3_API.Middlewares
 {
@@ -64,5 +65,7 @@ namespace BasarSoftTask3_API.Middlewares
             // Sonraki middleware'e geç
             await _next(context);
         }
+
+
     }
 }

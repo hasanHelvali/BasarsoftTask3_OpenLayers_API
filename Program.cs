@@ -57,6 +57,9 @@ builder.Services.AddScoped<UserManager<UserRegister>>();
 builder.Services.AddScoped<SignInManager<UserRegister>>();
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
+builder.Services.AddScoped<GetTableNameAndTableDatas>();
+builder.Services.AddScoped<FeatureConvertToGeojson>();
+
 //angular cors
 //builder.Services.AddCors(configuration => configuration.AddDefaultPolicy(policiy =>
 //policiy.WithOrigins("http://localhost:4200", "https://localhost:4200")

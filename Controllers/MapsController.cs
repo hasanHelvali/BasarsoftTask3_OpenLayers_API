@@ -13,6 +13,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Implementation;
 using NetTopologySuite.GeometriesGraph;
 using NetTopologySuite.IO;
+using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
 namespace BasarSoftTask3_API.Controllers
 {
@@ -26,15 +27,19 @@ namespace BasarSoftTask3_API.Controllers
         private readonly IMapRepository<LocAndUsers> _repository;
         private readonly MapContext _context;
         private readonly UserManager<UserRegister> _userManager;
+        private readonly GetTableNameAndTableDatas _getTableNameAndTableDatas;
+        private readonly FeatureConvertToGeojson _featureConvertToGeojson;
 
         //public MapsController(IRepository<LocationAndUser> repository)
         public MapsController(IMapRepository<LocAndUsers> repository, MapContext context
             , UserManager<UserRegister> userManager
-            )
+            , GetTableNameAndTableDatas getTableNameAndTableDatas, FeatureConvertToGeojson featureConvertToGeojson)
         {
             _repository = repository;
             _context = context;
             _userManager = userManager;
+            _getTableNameAndTableDatas = getTableNameAndTableDatas;
+            _featureConvertToGeojson = featureConvertToGeojson;
         }
 
         [HttpGet]
@@ -160,5 +165,62 @@ namespace BasarSoftTask3_API.Controllers
                 //return Ok("Yetkiniz Yok.");//Burada ise bir alan yok demektir. Bos bir veri donuyorum.
                 throw new Exception("Yetkiniz Yok");
         }
+
+        [HttpPost("GeoJsonSaveList")]
+        public async Task<IActionResult> GeoJsonSaveList(List<LocAndUserDTO> locAndUsers)
+        {
+            try
+            {
+                foreach (var locAndUser in locAndUsers)
+                {
+                    var geometry = GeometryAndWktConvert.WktToGeometrys(locAndUser.WKT);
+                    var _type = GeometryAndWktConvert.GetWktType(locAndUser.WKT);
+                    await _repository.CreateAsync(new LocAndUsers
+                    {
+                        Name = locAndUser.Name,
+                        //Type = locAndUser.Type,
+                        Type = _type,
+                        Geometry = geometry
+                    });
+
+                }
+                return Ok(true);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("GetLocationTableName")]
+        public async Task<IActionResult> GetLocationTableName()
+        {
+            try
+            {
+                var tableNames  = _getTableNameAndTableDatas.GetGeometryColumnTableNames();
+                return Ok(tableNames);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetLocationByGeoJsonData/{tableName}")]
+        public async Task<IActionResult> GetLocationByGeoJsonData(string tableName)
+        {
+            var _values = await _repository.GetAllAsync();
+            var values = _values.Select(x => new LocAndUsers
+            {
+                ID = x.ID,
+                Geometry = x.Geometry,
+                Name = x.Name,
+                Type = x.Type,
+            });
+            var parsedGeoJson = _featureConvertToGeojson.ConvertToGeoJson(values);
+
+            return Ok(parsedGeoJson);
+        }
+
     }
 }
